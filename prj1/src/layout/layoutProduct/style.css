@@ -1,0 +1,75 @@
+@import url('https://fonts.googleapis.com/css2?family=Karla:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,200;1,300;1,400;1,500;1,600;1,700;1,800&display=swap');
+*{
+    margin: 0;
+    padding: 0;
+    text-decoration: none;
+    color: #444444;
+    font-family: "Karla", sans-serif;
+}
+h5{
+    margin: 20px 0px;
+    font-size: 18px;
+
+}
+select{
+    border: 0.5px solid #444444;
+    padding: 6px;
+}
+.layoutproduct{
+    background-color: #F9F9F9;
+    margin-top: -10px;
+    margin-bottom: 20px;
+    font-size: 16px;
+    padding-left: 120px;
+}
+.layoutproduct a{
+    margin-right: 10px;
+}
+
+
+.section{
+    display: inline-block;
+    width: 32%;
+}
+.section--item {
+  
+    margin-top: 50px;
+    margin-bottom: 90px;
+    margin-right: 30px;
+    box-shadow: 0 0 0.6px #0003;
+    width: 100%;
+}
+
+.section--item__img {
+    width: 80%;
+    height: 80%;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.section--item__img img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding-bottom: 20px;
+    aspect-ratio: 4/3;
+}
+
+.section--item_des {
+    text-align: center;
+    font-size: 14px;
+    font-family: var(--ft1);
+    height: 20%;
+}
+.form{
+    display: flex;
+    align-items: center;
+}
+.form--input{
+    margin: 6px 0px;
+}
+.form label{
+    font-size: 16px;
+    padding-left: 10px;
+
+}
