@@ -8,29 +8,40 @@ import {
   faUser,
   faCartShopping,
   faX,
+  faTruck,
 } from "@fortawesome/free-solid-svg-icons";
 import "bootstrap/dist/css/bootstrap.min.css";
-import Container from "react-bootstrap/Container";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
 import logoright from "../layoutDefault/logo/logo--right.png";
-import { Link, Outlet } from "react-router-dom";
-import { useSelector } from "react-redux";
-
-
+import { Link, NavLink, Outlet } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { DeleteQuantity } from "../../Actions/cart";
+import Noficart from "./nofiCart";
 function LayoutDefault() {
   const [cart, setCart] = useState(false);
-
+  const dispatch = useDispatch();
   window.addEventListener("scroll", function () {
     const header = document.querySelector(".header");
     if (this.window.scrollY > 0) header.classList.add("animated");
     else header.classList.remove("animated");
   });
-  const handleCart = (e) => {
+
+  const handleCart = () => {
     setCart(!cart);
+  };
+  const DeleteAll = () => {
+    dispatch(DeleteQuantity());
   };
   const nofiCart = useSelector((data) => data.cartReducer);
   const total = nofiCart.reduce((sum, data) => {
+    return sum + data.quantity;
+  }, 0);
+
+  const price = nofiCart.reduce((sum, data) => {
+    return sum + data.infor.price * data.quantity;
+  }, 0);
+
+  const nofiWish = useSelector((data) => data.wishReducer);
+  const wish = nofiWish.reduce((sum, data) => {
     return sum + data.quantity;
   }, 0);
 
@@ -64,20 +75,22 @@ function LayoutDefault() {
                   </li>
                 </ul>
               </div>
+
               <div className="header--right__cnt2">
                 <ul>
                   <li>
                     <a>
-                      <FontAwesomeIcon icon={faMagnifyingGlass} />
+                      <NavLink to="layoutproduct">
+                        <FontAwesomeIcon icon={faMagnifyingGlass} />
+                      </NavLink>
                     </a>
                   </li>
                   <li>
                     <a>
-                      <Link to="layoutwishlist">
-                        <a>
-                          <FontAwesomeIcon icon={faHeart} />
-                        </a>
-                      </Link>
+                      <NavLink to="layoutwishlist" className="mainNofi">
+                        <FontAwesomeIcon icon={faHeart} />
+                        <div className="miniNofi">{wish}</div>
+                      </NavLink>
                     </a>
                   </li>
                   <li>
@@ -96,77 +109,7 @@ function LayoutDefault() {
             </div>
           </div>
 
-          <main>
-            <Outlet />
-          </main>
-
-          <div className="footer">
-            <Container>
-              <Row>
-                <Col>
-                  <img src={logoright} />
-                  <a>
-                    55 Gallaxy Enque, <br />
-                    2568 steet, 23568 NY
-                  </a>
-                  <a>
-                    <b>Phone</b>: (440) 000 000 0000
-                  </a>
-                  <a>
-                    <b>Email</b>: sales@yousite.com
-                  </a>
-                </Col>
-
-                <Col>
-                  <p className="end--title">INFORMATION</p>
-                  <a>About us</a>
-                  <a>Contact Us</a>
-                  <a>Career</a>
-                  <a>My Account</a>
-                  <a>Orders and Returns</a>
-                </Col>
-
-                <Col>
-                  <p className="end--title">QUICK SHOP</p>
-                  <a>Fashion</a>
-                  <a>Men</a>
-                  <a>Furniture</a>
-                  <a>Home Decor</a>
-                  <a>Shoes</a>
-                </Col>
-
-                <Col>
-                  <p className="end--title">CUSTOMER SERVICES</p>
-                  <a>Help & FAQs</a>
-                  <a>Returns Policy</a>
-                  <a>Terms & Conditions</a>
-                  <a>Privacy Policy</a>
-                  <a>Support Center</a>
-                </Col>
-
-                <Col>
-                  <p className="end--title">NEWSLETTER</p>
-                  <a>
-                    Enter your email to receive daily news and get 20% off
-                    coupon for all items.
-                  </a>
-                  <form>
-                    <input type="email" placeholder="Email address" required />
-                    <button className="button--one">SUBSCRIBE</button>
-                  </form>
-                </Col>
-              </Row>
-              <div className="end">
-                <div>
-                  <a>
-                    © 2023 Avone. All Rights Reserved. Ecommerce Software by
-                    Shopify
-                    <br /> Designed by AdornThemes{" "}
-                  </a>
-                </div>
-              </div>
-            </Container>
-          </div>
+          <Outlet />
         </div>
 
         {cart ? (
@@ -176,7 +119,7 @@ function LayoutDefault() {
               id={cart == true ? "extra--open" : "extra--close "}
             >
               <div className="extra--title">
-                <h4>YOUR CART</h4>
+                <h4>YOUR CART ({total})</h4>
                 <a onClick={handleCart}>
                   <FontAwesomeIcon icon={faX} />
                 </a>
@@ -184,21 +127,25 @@ function LayoutDefault() {
               <div>
                 {total > 0 ? (
                   <>
-                    <div>
-                      {nofiCart.map((item) => {
-                        return (
-                          <>
-                            <div>
-                              <div>
-                                <img />
-                              </div>
-                              <h4>{item.title}</h4>
-                              <h6>{item.price}</h6>
-                            </div>
-                          </>
-                        );
-                      })}
+                    <div className="cart--title">
+                      <a>
+                        <FontAwesomeIcon icon={faTruck} />
+                      </a>
+                      <span>You have got</span>
+                      <span>
+                        <b>FREE SHIPPING</b>{" "}
+                      </span>
                     </div>
+
+                    <button className="btn--del" onClick={DeleteAll}>
+                      Delete All
+                    </button>
+                    <div>
+                      {nofiCart.map((item) => (
+                        <Noficart item={item} key={item.id} />
+                      ))}
+                    </div>
+                    <div className="price">PRICE:$ {price.toFixed(2)}</div>
                   </>
                 ) : (
                   <>
@@ -210,7 +157,9 @@ function LayoutDefault() {
                         />
                       </p>
                       <p>You don't have any items in your cart.</p>
-                      <button className="extra--btn">Continue shopping</button>
+                      <button className="extra--btn" onClick={handleCart}>
+                        Continue shopping
+                      </button>
                     </div>
                   </>
                 )}
